@@ -1,32 +1,30 @@
 const express = require('express');  
+const serverless = require('serverless-express');  
 const cors = require('cors');  
-const createProductRoutes = require('./routes/productRoutes');  
-const ProductController = require('./controllers/productController');  
+const ProductController = require('../../controllers/productController');  
+const createProductRoutes = require('../../routes/productRoutes');  
 
 const app = express();  
 
-// Add CORS middleware  
+// CORS configuration  
 app.use(cors({  
-  origin: ['*'], // Allow all origins for testing  
+  origin: ['*'],  // Allow all origins for testing  
   methods: ['GET', 'POST', 'PUT', 'DELETE'],  
   allowedHeaders: ['Content-Type', 'Authorization']  
 }));  
 
-// Parse JSON bodies  
 app.use(express.json());  
 
-// Create product controller  
 const productController = new ProductController();  
 
 // Base route for testing  
 app.get('/', (req, res) => {  
   res.json({   
-    message: 'API is running!',  
+    message: 'Netlify serverless API is running!',  
     timestamp: new Date().toISOString()  
   });  
 });  
 
-// Setup product routes  
 app.use('/api/products', createProductRoutes(productController));  
 
 // Error handling middleware  
@@ -38,12 +36,5 @@ app.use((err, req, res, next) => {
   });  
 });  
 
-// For local development  
-if (require.main === module) {  
-  const PORT = process.env.PORT || 3002;  
-  app.listen(PORT, () => {  
-    console.log(`Server running on http://localhost:${PORT}`);  
-  });  
-}  
-
-module.exports = app;  
+// Export handler for Netlify  
+exports.handler = serverless(app);  
