@@ -18,6 +18,7 @@ class ProductController {
   }  
 
   async getAllProducts() {  
+    
       try {  
           const querySnapshot = await getDocs(this.collection);  
           return querySnapshot.docs.map(doc => ({  

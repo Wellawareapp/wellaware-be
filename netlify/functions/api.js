@@ -1,8 +1,8 @@
 const express = require('express');  
-const serverless = require('serverless-express');  
+const serverless = require('serverless-http');  
 const cors = require('cors');  
-const ProductController = require('../../controllers/productController');  
-const createProductRoutes = require('../../routes/productRoutes');  
+const ProductController = require('../../src/controllers/productController');  
+const createProductRoutes = require('../../src/routes/productRoutes');  
 
 const app = express();  
 
@@ -37,4 +37,8 @@ app.use((err, req, res, next) => {
 });  
 
 // Export handler for Netlify  
-exports.handler = serverless(app);  
+handler = serverless(app);
+
+exports.handler = async (event, context) => {
+  return await handler(event, context);
+};
